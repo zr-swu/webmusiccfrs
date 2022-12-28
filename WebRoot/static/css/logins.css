@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+
+body{
+	font-family: "微软雅黑";
+	overflow-y: hidden;
+}
+
+
+.main_panel{
+	margin-top:90px;
+	width: 380px;
+	height: 480px;
+}
+.logo{
+	border-bottom: 1px solid #DDD;
+	margin-bottom: 20px;
+}
+.logo img{
+	margin-bottom: 20px;
+	width: 80px;
+	height: 80px;
+}
+.input1{
+	margin-top: 20px;
+	width: 90%;
+}
+.login_btn{
+	margin-top: 15px;
+
+}
+.row_div{
+	margin-left: 10px;
+	margin-right: 10px
+}
+.row_div1{
+	margin-left: 20px;
+	margin-right: 10px;
+}
+.shadowfont{
+	
+	font-size: 18px;
+	color: steelblue;
+}

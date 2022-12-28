@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+	<struts>
+	    <!-- 	管理员主配置文件 -->
+	    <package name="admin" extends="global" namespace="">
+			<!-- 	管理员首页 -->
+			<action name="admin" class="adminController" method="index">
+				<result name="indexSuccess">/WEB-INF/view/admin/common/index.jsp</result>
+			</action>
+			
+			<!--  后台登录、首页action  -->
+			<action name="admin_index_*" class="adminController" method="{1}">
+				<result name="indexSuccess">/WEB-INF/view/admin/common/index.jsp</result>
+				<result name="contentSuccess">/WEB-INF/view/admin/common/index_content.jsp</result>
+				<result name="loginSuccess">/WEB-INF/view/admin/common/login.jsp</result>
+				<result name="doLoginSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+				<result name="quitSuccess">/WEB-INF/view/admin/common/login.jsp</result>
+			</action>
+			
+			<!--  后台音乐action  -->
+			<action name="admin_music_*" class="adminMusicController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/music/list.jsp</result>
+				<result name="addOrUpdateSuccess">/WEB-INF/view/admin/music/form.jsp</result>
+				<result name="doAddOrUpdateSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  后台用户action  -->
+			<action name="admin_user_*" class="adminUserController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/user/list.jsp</result>
+				<result name="addOrUpdateSuccess">/WEB-INF/view/admin/user/form.jsp</result>
+				<result name="doAddOrUpdateSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  后台歌单action  -->
+			<action name="admin_playlist_*" class="adminPlaylistController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/playlist/list.jsp</result>
+				<result name="addOrUpdateSuccess">/WEB-INF/view/admin/playlist/form.jsp</result>
+				<result name="viewSuccess">/WEB-INF/view/admin/playlist/view.jsp</result>
+				<result name="doAddOrUpdateSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  后台音乐评分action  -->
+			<action name="admin_score_*" class="adminScoreController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/score/list.jsp</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  后台音乐收藏action  -->
+			<action name="admin_collection_*" class="adminCollectionController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/collection/list.jsp</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  后台歌单评论action  -->
+			<action name="admin_comment_*" class="adminCommentController" method="{1}">
+				<result name="listSuccess">/WEB-INF/view/admin/comment/list.jsp</result>
+				<result name="deleteSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+    	</package>
+	    
+	</struts>

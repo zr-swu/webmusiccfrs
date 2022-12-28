@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	
+	<!-- 配置连接池: -->
+	<!-- 引入外部属性文件 -->
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<!-- 配置C3P0连接池: -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driver}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.user}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+	
+	<!-- Hibernate的相关信息 -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- 注入连接池 -->
+		<property name="dataSource" ref="dataSource"/>
+		<!-- 配置Hibernate的其他的属性 -->
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.connection.autocommit">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				
+				<!-- javax.persistence.validation.mode默认情况下是auto的，
+				就是说如果不设置的话它是会自动去你的classpath下面找一个bean-validation**包，
+				但是找不到，所以beanvalitionFactory错误。 
+				由于javax.persistence.validation.mode的属性值默认是auto，所以会出错。   
+				在hibernate.cfg.xml里将javax.persistence.validation.mode设置为none，
+				就可以避免出错了
+				所以，Hibernate 3.6以上版本在用junit测试时会提示错误：
+				Unable to get the default Bean Validation factory -->
+				<prop key="javax.persistence.validation.mode">none</prop>
+			</props>
+		</property>
+		<!-- 配置Hibernate的映射文件 -->
+		<property name="mappingResources">
+			<list>
+				<value>com/wmcfrs/model/Collection.hbm.xml</value>
+				<value>com/wmcfrs/model/Comment.hbm.xml</value>
+				<value>com/wmcfrs/model/Music.hbm.xml</value>
+				<value>com/wmcfrs/model/Record.hbm.xml</value>
+				<value>com/wmcfrs/model/Playlist.hbm.xml</value>
+				<value>com/wmcfrs/model/User.hbm.xml</value>
+				<value>com/wmcfrs/model/Score.hbm.xml</value>
+				<value>com/wmcfrs/model/Admin.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 事务管理: -->
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager" >
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 开启注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- 	spring项目启动监听器 -->
+	<bean id="initAppListener" class="com.wmcfrs.listener.InitAppListener">
+		<property name="musicService" ref="musicService"/>
+		<property name="recordService" ref="recordService"/>
+		<property name="playlistService" ref="playlistService"/>
+	</bean>
+	
+	
+	<!-- 	spring拦截器 用于权限验证-->
+	<bean id="authInterceptor" class="com.wmcfrs.interceptor.AuthInterceptor">
+	</bean>
+	
+	<!-- Controller的配置 ===========================-->
+	<!-- 首页controller-->
+	<bean name="indexController" class="com.wmcfrs.controller.IndexController" scope="prototype">
+		<property name="musicService" ref="musicService"/>
+		<property name="playlistService" ref="playlistService"/>
+		<property name="recordService" ref="recordService"/>
+		<property name="collectionService" ref="collectionService"/>
+		<property name="scoreService" ref="scoreService"/>
+	</bean>
+	
+	<!-- 基础controller-->
+	<bean name="baseController" class="com.wmcfrs.controller.BaseController" scope="prototype">
+	</bean>
+	
+	<!-- 音乐controller-->
+	<bean name="musicController" class="com.wmcfrs.controller.MusicController" scope="prototype">
+		<property name="musicService" ref="musicService"/>
+		<property name="playlistService" ref="playlistService"/>
+		<property name="collectionService" ref="collectionService"/>
+		<property name="recordService" ref="recordService"/>
+		<property name="commentService" ref="commentService"/>
+		<property name="scoreService" ref="scoreService"/>
+	</bean>
+	
+	<!-- 歌单controller-->
+	<bean name="playlistController" class="com.wmcfrs.controller.PlaylistController" scope="prototype">
+		<property name="musicService" ref="musicService"/>
+		<property name="playlistService" ref="playlistService"/>
+		<property name="collectionService" ref="collectionService"/>
+		<property name="recordService" ref="recordService"/>
+		<property name="commentService" ref="commentService"/>
+		<property name="scoreService" ref="scoreService"/>
+	</bean>
+	
+	<!-- 登录controller-->
+	<bean name="loginController" class="com.wmcfrs.controller.LoginController" scope="prototype">
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<!-- 用户controller-->
+	<bean name="userController" class="com.wmcfrs.controller.UserController" scope="prototype">
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<!-- 注册controller-->
+	<bean name="registerController" class="com.wmcfrs.controller.RegisterController" scope="prototype">
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<!-- 收藏controller-->
+	<bean name="collectionController" class="com.wmcfrs.controller.CollectionController" scope="prototype">
+		<property name="collectionService" ref="collectionService"/>
+	</bean>
+	
+	<!-- 评论controller-->
+	<bean name="commentController" class="com.wmcfrs.controller.CommentController" scope="prototype">
+		<property name="commentService" ref="commentService"/>
+	</bean>
+	
+	<!-- 评分controller-->
+	<bean name="scoreController" class="com.wmcfrs.controller.ScoreController" scope="prototype">
+		<property name="scoreService" ref="scoreService"/>
+		<property name="collectionService" ref="collectionService"/>
+	</bean>
+	
+	
+	<!-- 管理员controller-->
+	<bean name="adminController" class="com.wmcfrs.controller.AdminController" scope="prototype">
+		<property name="adminService" ref="adminService"/>
+		<property name="userService" ref="userService"/>
+		<property name="musicService" ref="musicService"/>
+		<property name="recordService" ref="recordService"/>
+		<property name="playlistService" ref="playlistService"/>
+		<property name="scoreService" ref="scoreService"/>
+		<property name="collectionService" ref="collectionService"/>
+		<property name="commentService" ref="commentService"/>
+	</bean>
+	
+	<!-- 管理员音乐controller-->
+	<bean name="adminMusicController" class="com.wmcfrs.controller.AdminMusicController" scope="prototype">
+		<property name="musicService" ref="musicService"/>
+	</bean>
+	
+	<!-- 管理员用户controller-->
+	<bean name="adminUserController" class="com.wmcfrs.controller.AdminUserController" scope="prototype">
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<!-- 管理员歌单controller-->
+	<bean name="adminPlaylistController" class="com.wmcfrs.controller.AdminPlaylistController" scope="prototype">
+		<property name="playlistService" ref="playlistService"/>
+		<property name="musicService" ref="musicService"/>
+		<property name="recordService" ref="recordService"/>
+	</bean>
+	
+	<!-- 管理员评分controller-->
+	<bean name="adminScoreController" class="com.wmcfrs.controller.AdminScoreController" scope="prototype">
+		<property name="scoreService" ref="scoreService"/>
+	</bean>
+	
+	<!-- 管理员收藏controller-->
+	<bean name="adminCollectionController" class="com.wmcfrs.controller.AdminCollectionController" scope="prototype">
+		<property name="collectionService" ref="collectionService"/>
+	</bean>
+	
+	<!-- 管理员评论controller-->
+	<bean name="adminCommentController" class="com.wmcfrs.controller.AdminCommentController" scope="prototype">
+		<property name="commentService" ref="commentService"/>
+	</bean>
+	
+	
+	
+	<!-- Service的配置 ===========================-->
+	<!-- 用户service-->
+	<bean id="userService" class="com.wmcfrs.service.UserService">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	
+	<!-- 音乐service-->
+	<bean id="musicService" class="com.wmcfrs.service.MusicService">
+		<property name="musicDao" ref="musicDao"/>
+	</bean>
+	
+	<!-- 歌单service-->
+	<bean id="playlistService" class="com.wmcfrs.service.PlaylistService">
+		<property name="playlistDao" ref="playlistDao"/>
+	</bean>
+	
+	<!-- 收藏service-->
+	<bean id="collectionService" class="com.wmcfrs.service.CollectionService">
+		<property name="collectionDao" ref="collectionDao"/>
+	</bean>
+	
+	<!-- 歌单音乐service-->
+	<bean id="recordService" class="com.wmcfrs.service.RecordService">
+		<property name="recordDao" ref="recordDao"/>
+	</bean>
+	
+	<!-- 评论service-->
+	<bean id="commentService" class="com.wmcfrs.service.CommentService">
+		<property name="commentDao" ref="commentDao"/>
+	</bean>
+	
+	<!-- 评分service-->
+	<bean id="scoreService" class="com.wmcfrs.service.ScoreService">
+		<property name="scoreDao" ref="scoreDao"/>
+	</bean>
+	
+	<!-- 管理员service-->
+	<bean id="adminService" class="com.wmcfrs.service.AdminService">
+		<property name="adminDao" ref="adminDao"/>
+	</bean>
+	
+	
+	<!-- Dao的配置 ===========================-->
+	<!-- 用户dao-->
+	<bean id="userDao" class="com.wmcfrs.dao.UserDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 音乐dao-->
+	<bean id="musicDao" class="com.wmcfrs.dao.MusicDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 歌单dao-->
+	<bean id="playlistDao" class="com.wmcfrs.dao.PlaylistDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 收藏dao-->
+	<bean id="collectionDao" class="com.wmcfrs.dao.CollectionDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 歌单音乐dao-->
+	<bean id="recordDao" class="com.wmcfrs.dao.RecordDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 评论dao-->
+	<bean id="commentDao" class="com.wmcfrs.dao.CommentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 评分dao-->
+	<bean id="scoreDao" class="com.wmcfrs.dao.ScoreDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 管理员dao-->
+	<bean id="adminDao" class="com.wmcfrs.dao.AdminDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+</beans>

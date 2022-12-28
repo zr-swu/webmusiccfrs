@@ -1,0 +1,127 @@
+body,html{
+	height: 100%;
+	font-family: "微软雅黑";
+}
+body{
+	
+}
+.summary_container{
+	width: 600px;
+	margin: 100px auto;
+}
+.summary_title{
+	text-align: center;
+	display: block;
+	font-size: 20px;
+}
+.navbar{
+	margin-bottom: 0px;
+}
+.admin_full_container{
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+.user_iframe_box{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.user_iframe_box iframe{
+	width: 100%;
+	height: 100%;
+}
+.user_table_container{
+	margin-top: 20px;
+	padding: 15px;
+}
+
+
+.cyz_summary_container{
+	width: 600px;
+	margin: 100px auto;
+}
+.cyz_summary_title{
+	text-align: center;
+	display: block;
+	font-size:20px;
+}
+
+.cyz_full_container{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.navbar{
+	margin-bottom: 0px;
+}
+.cyz_iframe_box{
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+.cyz_iframe_box iframe{
+	width: 100%;
+	height: 100%;
+}
+
+.cyz_table_container{
+	padding: 15px;
+}
+/****************��¼���ֵ�CSS*******************/
+
+
+.content{
+	width: 100%;
+	height: 100%;
+	background: url(../img/stretched-1920-1080-704565.jpg);
+}
+
+.main_panel{
+	margin-top:200px;
+	width: 380px;
+	height: 480px;
+}
+.logo{
+	border-bottom: 1px solid #DDD;
+	margin-bottom: 20px;
+}
+.logo img{
+	margin-bottom: 20px;
+	width: 80px;
+	height: 80px;
+}
+.input1{
+	margin-top: 20px;
+	width: 90%;
+}
+.login_btn{
+	margin-top: 15px;
+
+}
+.row_div{
+	margin-left: 10px;
+	margin-right: 10px
+}
+.row_div1{
+	margin-left: 20px;
+	margin-right: 10px;
+}
+.shadowfont{
+	
+	font-size: 18px;
+	color: steelblue;
+}
+
+.admin-list-table{
+	text-align: center;
+}
+
+.admin-list-table tr td{
+	border:1px solid #ddd
+}
+

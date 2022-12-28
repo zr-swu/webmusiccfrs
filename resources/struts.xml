@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+	<struts>
+		<!-- 	主配置文件 -->
+		<!-- 请求参数的编码方式 -->
+		<constant name="struts.i18n.encoding" value="utf-8" />
+		<!-- struts配置文件改动后，是否重新加载 -->
+	    <constant name="struts.configuration.xml.reload" value="true" />
+	    <!-- struts配置action无后缀-->
+	    <constant name="struts.action.extension" value=","/>
+	    <!-- struts配置开发模式-->
+	    <constant name="struts.devMode" value="false" />
+	    <!-- struts配置静态文件直接获取-->
+	    <constant name="struts.action.excludePattern" value="/static/.*"/>
+	    
+	    <package name="global" extends="struts-default,json-default" namespace="">
+			<!-- struts配置拦截器-->
+			<interceptors>
+				<!-- struts配置自定义权限拦截器-->
+				<interceptor name="authInterceptor" class="authInterceptor"/>
+				<!-- 一个拦截器栈中可以定义多个拦截器 -->
+				<interceptor-stack name="defualtSecurityStackWithAuthentication">
+					<interceptor-ref name="defaultStack" />
+					<interceptor-ref name="authInterceptor" />
+				</interceptor-stack>
+			</interceptors>
+			<!-- struts配置默认拦截器-->
+			<default-interceptor-ref name="defualtSecurityStackWithAuthentication" />
+			
+			<!-- 全局的返回结果处理，登录 -->
+			<global-results>
+				<result name="login" type="redirectAction">
+					<param name="actionName">login</param>
+					<param name="namespace"></param>
+				</result>
+				<result name="adminLogin" type="redirectAction">
+					<param name="actionName">admin_index_login</param>
+					<param name="namespace"></param>
+				</result>
+			</global-results>
+			
+			<!--  首页action  -->
+			<action name="index" class="indexController" method="index">
+				<result name="success">/WEB-INF/view/index/index.jsp</result>
+			</action>
+			
+			<!--  音乐详情action  -->
+			<action name="musicView" class="musicController" method="view">
+				<result name="success">/WEB-INF/view/music/view.jsp</result>
+			</action>
+			
+			<!--  音乐列表action  -->
+			<action name="listMusic" class="musicController" method="list">
+				<result name="success">/WEB-INF/view/music/list.jsp</result>
+			</action>
+			
+			<!--  评分列表action  -->
+			<action name="listScore" class="scoreController" method="list">
+				<result name="success">/WEB-INF/view/score/list.jsp</result>
+			</action>
+			
+			<!--  评分action  -->
+			<action name="addScore" class="scoreController" method="addScore">
+				<result name="success"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  歌单详情action  -->
+			<action name="playlistView" class="playlistController" method="view">
+				<result name="success">/WEB-INF/view/playlist/view.jsp</result>
+			</action>
+			
+			<!--  歌单列表action  -->
+			<action name="playlistList" class="playlistController" method="list">
+				<result name="success">/WEB-INF/view/playlist/list.jsp</result>
+			</action>
+			
+			<!--  登录action  -->
+			<action name="login" class="loginController" method="login">
+				<result name="success">/WEB-INF/view/login.jsp</result>
+			</action>
+			
+			<!--  登录action  -->
+			<action name="doLogin" class="loginController" method="doLogin">
+				<result name="doLoginSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  注销action  -->
+			<action name="quit" class="loginController" method="quit">
+				<result name="quitSuccess" type="redirectAction">
+					<param name="actionName">index</param>
+					<param name="namespace"></param>
+				</result>
+			</action>
+			
+			<!--  注册action  -->
+			<action name="register" class="registerController" method="register">
+				<result name="success">/WEB-INF/view/register.jsp</result>
+			</action>
+			
+			<!--  注册action  -->
+			<action name="doRegister" class="registerController" method="doRegister">
+				<result name="doRegisterSuccess"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  添加收藏action  -->
+			<action name="addCollection" class="collectionController" method="addCollection">
+				<result name="success"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  收藏列表action  -->
+			<action name="listCollection" class="collectionController" method="list">
+				<result name="success">/WEB-INF/view/collection/list.jsp</result>
+			</action>
+			
+			<!--  添加评论action  -->
+			<action name="addComment" class="commentController" method="addComment">
+				<result name="success"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  评论列表action  -->
+			<action name="commentList" class="commentController" method="list">
+				<result name="success">/WEB-INF/view/comment/list.jsp</result>
+			</action>
+			
+			<!--  删除评论action  -->
+			<action name="deleteComment" class="commentController" method="delete">
+				<result name="success"  type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  用户详情action  -->
+			<action name="viewUser" class="userController" method="viewUser">
+				<result name="success">/WEB-INF/view/user/view.jsp</result>
+			</action>
+			
+			<!--  修改用户action  -->
+			<action name="editUser" class="userController" method="editUser">
+				<result name="success">/WEB-INF/view/user/form.jsp</result>
+			</action>
+			
+			<!--  修改用户action  -->
+			<action name="updateUser" class="userController" method="updateUser">
+				<result name="success" type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  修改用户密码action  -->
+			<action name="editPassword" class="userController" method="editPassword">
+				<result name="success">/WEB-INF/view/user/password.jsp</result>
+			</action>
+			
+			<!--  修改用户密码action  -->
+			<action name="updatePassword" class="userController" method="updatePassword">
+				<result name="success" type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+			
+			<!--  公共action，包含文件上传等  -->
+			<action name="upload" class="baseController" method="upload">
+				<result name="uploadSuccess" type="json">
+					<param name="root">resultMap</param>
+				</result>
+			</action>
+		
+    	</package>
+    	
+    	<include file="struts-admin.xml"></include>
+	    
+	</struts>
